@@ -5,6 +5,19 @@
 % define upper and lower bounds
 
 
+clearvars
+
+% get data
+load best_offsets
+load fit_data
+
+% define model to work with
+Model = TwoTubes;
+
+
+% specify bounds. Parameters will be found 
+% within these bounds
+
 lb.t_offset = 0;
 ub.t_offset = 10;
 
@@ -21,26 +34,15 @@ lb.tau_s = 1e-6;
 ub.tau_s = 10;
 
 
-load best_offsets
-load fit_data
-
-Model = TwoTubes_f2;
+% how many times should we fit each odorant?
+N = 30; 
 
 
-clear p
-
-N = 30; % try to fit each odorant N times
 all_r2 = NaN(length(fd),N);
 
 
-% does .fitparams already exist?
 savename = [class(Model) '.fitparams'];
 
-
-if ~exist('p','var') 
-	p = repmat(ub,27,N);
-
-end
 
 for j = 1:N
 
@@ -68,6 +70,8 @@ for j = 1:N
 
 		p(i,j) = Model.Parameters;
 
+		disp(Model.Parameters)
+
 		all_r2(i,j) = this_r2;
 
 
@@ -80,6 +84,8 @@ for j = 1:N
 	end
 end
 
+
+return
 
 
 % show all the fits 
