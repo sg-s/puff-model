@@ -148,39 +148,3 @@ end
 figlib.pretty()
 
 
-% order by variabnility in fit params
-V = NaN(27,1);
-for i = 1:27
-	V(i) = mean([p(i,:).w]);
-end
-[~,idx] = sort(V);
-
-
-Model.Response = fd(6).response;
-
-figure('outerposition',[300 300 1200 600],'PaperUnits','points','PaperSize',[1200 600]); hold on
-
-plot(Model.Response,'k')
-
-for i = 1:10
-	Model.Parameters = p(6,i);
-	Model.evaluate;
-	plot(Model.Prediction)
-end
-
-
-
-
-Model.Response = fd(1).response;
-Model.Parameters = p(1,1);
-
-tau_s = logspace(-15,-1,100);
-tau_s_r2 = NaN*tau_s;
-
-for i = 1:length(tau_s)
-	Model.Parameters.tau_s = tau_s(i);
-	Model.evaluate;
-
-	tau_s_r2(i) = statlib.correlation(Model.Response,Model.Prediction);
-
-end
