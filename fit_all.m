@@ -28,10 +28,10 @@ lb.k_d = 1e-3;
 ub.k_d = 1e2;
 
 lb.w = 0;
-ub.w = 1e3;
+ub.w = 1e2;
 
 lb.tau_s = 1e-6;
-ub.tau_s = 10;
+ub.tau_s = 1;
 
 
 % how many times should we fit each odorant?
@@ -44,9 +44,12 @@ all_r2 = NaN(length(fd),N);
 savename = [class(Model) '.fitparams'];
 
 
-for j = 1:N
 
-	for i = length(fd):-1:1
+
+for i = length(fd):-1:1
+
+	for j = 1:N
+
 		disp(['Fitting ' mat2str(i)])
 
 		ub.t_offset = best_offsets(i);
