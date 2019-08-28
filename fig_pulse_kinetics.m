@@ -5,7 +5,7 @@
 
 
 % specify model to use
-Model = TwoTubes_f2;
+Model = TwoTubes;
 
 load('alldata')
 
@@ -83,7 +83,7 @@ load(savename,'-mat')
 
 
 
-for i = 1:length(fd)
+for i = length(fd):-1:1
 
 	% pick the best r^2
 	this_r2 = all_r2(i,:);
@@ -92,8 +92,12 @@ for i = 1:length(fd)
 
 	Model.Stimulus = fd(i).stimulus;
 	Model.Parameters = p(i,pick_me);
-	Model.evaluate;
-	plot(ax(i),time(1:10:3e3),Model.Prediction,'r')
+	try
+		Model.evaluate;
+		plot(ax(i),time(1:10:3e3),Model.Prediction,'r')
+	catch
+		
+	end
 	axis(ax(i),'off')
 end
 

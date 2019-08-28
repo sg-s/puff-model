@@ -54,11 +54,21 @@ all_r2 = NaN(length(fd),N);
 savename = [class(Model) '.fitparams'];
 
 
+if exist(savename,'file') == 2
+	load(savename,'-mat')
+end
+
 
 
 for i = length(fd):-1:1
 
 	for j = 1:N
+
+		
+
+		if ~isnan(all_r2(i,j))
+			continue
+		end
 
 		disp(['Fitting ' mat2str(i)])
 
@@ -129,7 +139,7 @@ for i = 1:length(fn)
 		plot_this = [p(j,:).(fn{i})];
 		plot_this(all_r2(j,:) < .99) = NaN;
 
-		x = 0*plot_this(:) + j + randn(size(p,2),1)/10;
+		x = 0*plot_this(:) + j + randn(length(plot_this),1)/10;
 		plot(x,plot_this,'k.')
 
 	end
