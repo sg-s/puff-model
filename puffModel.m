@@ -1,7 +1,7 @@
 %% puffModel.m
 % a simple model for puffs of odorant using two air streams
 
-function [x2, f2] = puffModel(S,p)
+function [f2, x2] = puffModel(S,p)
 
 
 	% unpack parameters  
@@ -28,7 +28,7 @@ function [x2, f2] = puffModel(S,p)
 	L = V1/V2;
 
 
-	ic = [1e-3 1e-3 1 1e-3];
+	ic = [1e-3 0 0 0];
 
 	time = 1e-2*(1:length(S)); % 10 ms timestep
 	Tspan = [min(time) max(time)];

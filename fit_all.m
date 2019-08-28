@@ -47,8 +47,8 @@ for j = 1:N
 	for i = length(fd):-1:1
 		disp(['Fitting ' mat2str(i)])
 
-		% ub.t_offset = best_offsets(i);
-		% lb.t_offset = best_offsets(i);
+		ub.t_offset = best_offsets(i);
+		lb.t_offset = best_offsets(i);
 
 		Model.Stimulus = fd(i).stimulus;
 		Model.Response = fd(i).response;
