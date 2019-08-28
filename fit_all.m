@@ -35,7 +35,7 @@ ub.tau_s = 1;
 
 
 % how many times should we fit each odorant?
-N = 30; 
+N = 100; 
 
 
 all_r2 = NaN(length(fd),N);
