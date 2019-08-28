@@ -25,13 +25,23 @@ lb.k_a = 1e-3;
 ub.k_a = 1e3;
 
 lb.k_d = 1e-3;
-ub.k_d = 1e2;
+ub.k_d = 1e3;
 
 lb.w = 0;
-ub.w = 1e2;
+ub.w = 1e3;
 
 lb.tau_s = 1e-6;
-ub.tau_s = 1;
+ub.tau_s = 10;
+
+
+
+
+% define bounds for initial seeds
+seed_lb = orderfields(lb);
+seed_ub = orderfields(ub);
+
+
+
 
 
 % how many times should we fit each odorant?
@@ -60,7 +70,20 @@ for i = length(fd):-1:1
 		Model.Upper = ub;
 		Model.Lower = lb;
 
-		Model.Parameters = [];
+
+		% pick a random seed
+		slb = structlib.vectorise(seed_lb);
+		sub = structlib.vectorise(seed_ub);
+		ParameterNames = sort(fieldnames(seed_lb));
+
+
+		% pick a random point within bounds
+		x =  (sub-slb).*(rand(length(slb),1)) + slb;
+		for k = 1:length(ParameterNames)
+			Model.Parameters.(ParameterNames{k}) = x(k);
+		end
+
+		% Model.Parameters = [];
 
 	
 		Model.fit;
