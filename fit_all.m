@@ -12,7 +12,7 @@ load best_offsets
 load fit_data
 
 % define model to work with
-Model = TwoTubes;
+Model = TwoTubesSimple;
 
 
 % specify bounds. Parameters will be found 
@@ -21,8 +21,8 @@ Model = TwoTubes;
 lb.t_offset = 0;
 ub.t_offset = 10;
 
-lb.k_a = 1e-3;
-ub.k_a = 1e3;
+% lb.k_a = 1e-3;
+% ub.k_a = 1e3;
 
 lb.k_d = 1e-3;
 ub.k_d = 1e3;
@@ -45,7 +45,7 @@ seed_ub = orderfields(ub);
 
 
 % how many times should we fit each odorant?
-N = 100; 
+N = 30; 
 
 
 all_r2 = NaN(length(fd),N);
@@ -155,6 +155,7 @@ figlib.pretty()
 % show variations
 
 figure('outerposition',[300 300 1200 600],'PaperUnits','points','PaperSize',[1200 600]); hold on
+fn = {'k_a','k_d','tau_s','w'};
 idx = 1;
 clear ax
 for i = 1:length(fn)
@@ -170,7 +171,7 @@ for i = 1:length(fn)
 		ylabel(fn{j})
 		
 
-		for k = 1:size(p,1)
+		for k = size(p,1):-1:1
 
 			x = [p(k,:).(fn{i})];
 			x(all_r2(k,:) < .99) = NaN;
