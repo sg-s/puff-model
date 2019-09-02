@@ -28,7 +28,7 @@ lb.k_d = 1e-3;
 ub.k_d = 1e3;
 
 lb.W = 0;
-ub.W = 1e3;
+ub.W = 1e5;
 
 lb.tau_s = 1e-6;
 ub.tau_s = 10;
