@@ -5,7 +5,7 @@
 
 
 % specify model to use
-Model = TwoTubesSimple;
+Model = TwoTubesAlt;
 
 load('alldata')
 

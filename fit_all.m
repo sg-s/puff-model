@@ -129,8 +129,7 @@ return
 
 figure('outerposition',[300 300 1200 600],'PaperUnits','points','PaperSize',[1200 600]); hold on
 
-fn = {'k_a','k_d','tau_s','w'};
-fn = {'k_d','tau_s','w'};
+fn = setdiff(fieldnames(p),'t_offset');
 
 for i = 1:length(fn)
 	subplot(2,2,i); hold on
