@@ -108,13 +108,17 @@ methods
 			x2 = y(3);
 			Theta2 = y(4);
 
-
-			dTheta2 = x2*(1-Theta2)/tau_a - k_d*Theta2/tau_a;
+			dTheta2 = 0;
+			if tau_a > 1
+				dTheta2 = x2*(1-Theta2)/tau_a - k_d*Theta2/tau_a;
+			end
 
 			dx2 = (stim*phi*x1)/tau_2 - (1+ stim*phi)*x2/tau_2 - W*dTheta2;
 
-
-			dTheta1 = x1*(1 - Theta1)/tau_a - k_d*Theta1/tau_a;
+			dTheta1 = 0;
+			if tau_a > 0
+				dTheta1 = x1*(1 - Theta1)/tau_a - k_d*Theta1/tau_a;
+			end
 
 			dx1 = (1 - x1)/tau_s - (stim*phi*x1)/(tau_2) - W*dTheta1;
 

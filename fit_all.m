@@ -33,8 +33,8 @@ ub.W = 1e5;
 lb.tau_s = 1e-6;
 ub.tau_s = 10;
 
-lb.tau_a = 1e-6;
-ub.tau_a = 1e4;
+lb.tau_a = 0;
+ub.tau_a = 0;
 
 
 % define bounds for initial seeds
