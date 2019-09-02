@@ -12,7 +12,7 @@ load best_offsets
 load fit_data
 
 % define model to work with
-Model = TwoTubesSimple;
+Model = TwoTubesAlt;
 
 
 % specify bounds. Parameters will be found 
@@ -27,13 +27,14 @@ ub.t_offset = 10;
 lb.k_d = 1e-3;
 ub.k_d = 1e3;
 
-lb.w = 0;
-ub.w = 1e3;
+lb.W = 0;
+ub.W = 1e3;
 
 lb.tau_s = 1e-6;
 ub.tau_s = 10;
 
-
+lb.tau_a = 1e-6;
+ub.tau_a = 10;
 
 
 % define bounds for initial seeds
@@ -129,6 +130,7 @@ return
 figure('outerposition',[300 300 1200 600],'PaperUnits','points','PaperSize',[1200 600]); hold on
 
 fn = {'k_a','k_d','tau_s','w'};
+fn = {'k_d','tau_s','w'};
 
 for i = 1:length(fn)
 	subplot(2,2,i); hold on
@@ -156,6 +158,7 @@ figlib.pretty()
 
 figure('outerposition',[300 300 1200 600],'PaperUnits','points','PaperSize',[1200 600]); hold on
 fn = {'k_a','k_d','tau_s','w'};
+fn = {'k_d','w'};
 idx = 1;
 clear ax
 for i = 1:length(fn)
@@ -179,7 +182,7 @@ for i = 1:length(fn)
 			y = [p(k,:).(fn{j})];
 			y(all_r2(k,:) < .99) = NaN;
 
-			plot(x,y,'.')
+			plot(x,y,'.','MarkerSize',20)
 
 		end
 		
