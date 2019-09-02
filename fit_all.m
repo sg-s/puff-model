@@ -25,7 +25,7 @@ ub.t_offset = 10;
 % ub.k_a = 1e3;
 
 lb.k_d = 1e-3;
-ub.k_d = 1e3;
+ub.k_d = 1e4;
 
 lb.W = 0;
 ub.W = 1e5;
@@ -34,7 +34,7 @@ lb.tau_s = 1e-6;
 ub.tau_s = 10;
 
 lb.tau_a = 1e-6;
-ub.tau_a = 1e3;
+ub.tau_a = 1e4;
 
 
 % define bounds for initial seeds
@@ -81,17 +81,10 @@ for i = length(fd):-1:1
 		Model.Upper = ub;
 		Model.Lower = lb;
 
-
-		% pick a random seed
-		slb = structlib.vectorise(seed_lb);
-		sub = structlib.vectorise(seed_ub);
 		ParameterNames = sort(fieldnames(seed_lb));
 
-
-		% pick a random point within bounds
-		x =  (sub-slb).*(rand(length(slb),1)) + slb;
 		for k = 1:length(ParameterNames)
-			Model.Parameters.(ParameterNames{k}) = x(k);
+			Model.Parameters.(ParameterNames{k}) = 1;
 		end
 
 		% Model.Parameters = [];
