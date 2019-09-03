@@ -58,12 +58,9 @@ if exist(savename,'file') == 2
 end
 
 
+for j = 1:N
+	for i = length(fd):-1:1
 
-for i = length(fd):-1:1
-
-	for j = 1:N
-
-		
 
 		if ~isnan(all_r2(i,j))
 			continue
@@ -103,11 +100,13 @@ for i = length(fd):-1:1
 		all_r2(i,j) = this_r2;
 
 
-		close all
-		drawnow
+		if ismac
+			close all
+			drawnow
+			Model.plot;
+			drawnow
+		end
 
-		Model.plot;
-		drawnow
 		save(savename,'p','all_r2')
 	end
 end
