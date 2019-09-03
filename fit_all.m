@@ -12,7 +12,7 @@ load best_offsets
 load fit_data
 
 % define model to work with
-Model = TwoTubesAlt;
+Model = TwoTubesX;
 
 
 % specify bounds. Parameters will be found 
@@ -21,14 +21,11 @@ Model = TwoTubesAlt;
 lb.t_offset = 0;
 ub.t_offset = 10;
 
-% lb.k_a = 1e-3;
-% ub.k_a = 1e3;
-
-lb.k_d = 1e-3;
-ub.k_d = 1e4;
+lb.k_d = 0;
+ub.k_d = 0;
 
 lb.W = 0;
-ub.W = 1e5;
+ub.W = 1e3;
 
 lb.tau_s = 1e-6;
 ub.tau_s = 10;
@@ -38,11 +35,12 @@ ub.tau_a = 0;
 
 
 % define bounds for initial seeds
-seed_lb = orderfields(lb);
-seed_ub = orderfields(ub);
+lb = orderfields(lb);
+ub = orderfields(ub);
+ParameterNames = sort(fieldnames(lb));
 
-
-
+% also take note of which parmaeters are constrained
+H = [ParameterNames{structlib.vectorise(ub) - structlib.vectorise(lb) == 0}];
 
 
 % how many times should we fit each odorant?
@@ -52,7 +50,7 @@ N = 30;
 all_r2 = NaN(length(fd),N);
 
 
-savename = [class(Model) '.fitparams'];
+savename = [class(Model)  H '.fitparams'];
 
 
 if exist(savename,'file') == 2
@@ -81,7 +79,7 @@ for i = length(fd):-1:1
 		Model.Upper = ub;
 		Model.Lower = lb;
 
-		ParameterNames = sort(fieldnames(seed_lb));
+		
 
 		for k = 1:length(ParameterNames)
 			Model.Parameters.(ParameterNames{k}) = 1;
@@ -108,7 +106,7 @@ for i = length(fd):-1:1
 		close all
 		drawnow
 
-		Model.plot
+		Model.plot;
 		drawnow
 		save(savename,'p','all_r2')
 	end

@@ -21,7 +21,7 @@ end % props
 methods 
 
 
-	function self = TwoTubesAlt(varargin)
+	function self = TwoTubesX(varargin)
 
 		self = self@ConstructableHandle(varargin{:});   
 
@@ -30,7 +30,7 @@ methods
 			self.Parameters.t_offset = 1;
 			self.Parameters.tau_s = 1e-1;
 			self.Parameters.tau_a = 1e-1;
-			self.Parameters.W = 1;
+			self.Parameters.w = 1;
 			self.Parameters.k_d = 1;
 			
 			
@@ -66,11 +66,11 @@ methods
 		t_offset = self.Parameters.t_offset;
 		tau_s = self.Parameters.tau_s;
 		tau_a = self.Parameters.tau_a;
-		W = self.Parameters.W;
+		w = self.Parameters.w;
 		k_d = self.Parameters.k_d;
 
 		% x12 theta1 x2 theta2
-		ic = [1 1/(1+k_d) 0 0];
+		
 
 		S = self.Stimulus;
 
@@ -79,28 +79,40 @@ methods
 
 
 
+		options = odeset('MaxStep',.1);
+		warning off
 
-
-		if tau_a == 0 & k_d == 0
+		if tau_a == 0 && k_d == 0
 			% interpret this as k_d being equal to infinity 
 			% and use the 2-param model
+			ic = [1 0];
+			[T, Y] = ode23t(@(t,y) TwoParamODE(t,y,time,S),Tspan,ic,options); % Solve ODE
+
+			% re-interpolate the solution to fit the stimulus
+			x2 = corelib.vectorise(interp1(T,Y(:,2),time));
 
 		elseif tau_a == 0 
 			% 3 param model
+			ic = [1 0];
+			[T, Y] = ode23t(@(t,y) ThreeParamODE(t,y,time,S),Tspan,ic,options); % Solve ODE
+
+			% re-interpolate the solution to fit the stimulus
+			x2 = corelib.vectorise(interp1(T,Y(:,2),time));
 		else
 			% full model
+			ic = [1 1/(1+k_d) 0 0];
+			[T, Y] = ode23t(@(t,y) FullODE(t,y,time,S),Tspan,ic,options); % Solve ODE
+
+			% re-interpolate the solution to fit the stimulus
+			x2 = corelib.vectorise(interp1(T,Y(:,3),time));
 
 		end
 
-		options = odeset('MaxStep',.1);
-		warning off
-		[T, Y] = ode23t(@(t,y) FullODE(t,y,time,S),Tspan,ic,options); % Solve ODE
 		warning on
 
-
-		% re-interpolate the solution to fit the stimulus
-		x2 = corelib.vectorise(interp1(T,Y(:,3),time));
-
+		
+		
+	
 
 		% allow for some offset in time
 		x2 = circshift(x2,floor(self.Parameters.t_offset));
@@ -128,11 +140,11 @@ methods
 
 			dTheta2 = x2*(1-Theta2)/tau_a - k_d*Theta2/tau_a;
 
-			dx2 = (stim*phi*x1)/tau_2 - (1+ stim*phi)*x2/tau_2 - W*dTheta2;
+			dx2 = (stim*phi*x1)/tau_2 - (1+ stim*phi)*x2/tau_2 - w*dTheta2;
 
 			dTheta1 = x1*(1 - Theta1)/tau_a - k_d*Theta1/tau_a;
 
-			dx1 = (1 - x1)/tau_s - (stim*phi*x1)/(tau_2) - W*dTheta1;
+			dx1 = (1 - x1)/tau_s - (stim*phi*x1)/(tau_2) - w*dTheta1;
 
 			dy = 0*y;
 			dy(1) = dx1;
@@ -153,12 +165,10 @@ methods
 			x1 = y(1);
 			x2 = y(2);
 
-	
 
 			effective_tau = tau_2*(1 + (w/k_d)/((1+(x2/k_d))^2));
 
 			dx2 =  (stim*phi*x1 - ((1 + stim*phi)*x2))/effective_tau;
-
 
 
 			effective_tau = 1 + (w/k_d)/((1+(x1/k_d))^2);
@@ -187,12 +197,12 @@ methods
 		% tau_s and w
 		function dy = TwoParamODE(t,y,time,odor)
 
+			stim = interp1(time,odor,t); 
 
 			% unpack variables
 			x1 = y(1);
 			x2 = y(2);
 
-	
 
 			effective_tau = tau_2*(1 + w);
 

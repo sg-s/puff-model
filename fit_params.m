@@ -6,27 +6,25 @@ close all
 clearvars
 load fit_data
 
-Model = TwoTubesAlt;
+Model = TwoTubesX;
 
 % define bounds for fitting
 
 lb.t_offset = 0;
 ub.t_offset = 10;
 
-% lb.k_a = 1e-3;
-% ub.k_a = 1e3;
 
-lb.k_d = 1e-3;
+lb.k_d = 0;
 ub.k_d = 1e2;
 
-lb.W = 0;
-ub.W = 1e3;
+lb.w = 0;
+ub.w = 0;
 
 lb.tau_s = 1e-6;
 ub.tau_s = 10;
 
-lb.tau_a = 1e-6;
-ub.tau_a = 1e3;
+lb.tau_a = 0;
+ub.tau_a = 0;
 
 
 % how many times should we fit this?
@@ -34,7 +32,7 @@ N = 1;
 
 
 % which odorant to fit?
-do_this = 17;
+do_this = 2;
 
 all_r2 = NaN(N,1);
 
