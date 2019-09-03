@@ -24,8 +24,8 @@ ub.t_offset = 10;
 lb.k_d = 0;
 ub.k_d = 0;
 
-lb.W = 0;
-ub.W = 1e3;
+lb.w = 0;
+ub.w = 1e3;
 
 lb.tau_s = 1e-6;
 ub.tau_s = 10;
