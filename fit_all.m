@@ -30,8 +30,8 @@ ub.w = 1e3;
 lb.tau_s = 1e-6;
 ub.tau_s = 10;
 
-lb.tau_a = 0;
-ub.tau_a = 0;
+lb.tau_a = 1e-3;
+ub.tau_a = 1e3;
 
 
 % define bounds for initial seeds
