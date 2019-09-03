@@ -21,8 +21,8 @@ Model = TwoTubesX;
 lb.t_offset = 0;
 ub.t_offset = 10;
 
-lb.k_d = 0;
-ub.k_d = 0;
+lb.k_d = 1e-4;
+ub.k_d = 1e4;
 
 lb.w = 0;
 ub.w = 1e3;
