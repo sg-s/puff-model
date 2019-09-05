@@ -59,6 +59,10 @@ methods
 		% fixed parameters
 		phi = q1/q2; % 3mL/s / 30 mL/s
 		tau_2 = (V2/q2); % seconds
+
+		tau_2 = tau_2/2;
+
+
 		L = V1/V2;
 
 
@@ -72,11 +76,16 @@ methods
 		% x12 theta1 x2 theta2
 		
 
+
+
+
 		S = self.Stimulus;
 
 		time = 1e-2*(1:length(S)); % 10 ms timestep
 		Tspan = [min(time) max(time)];
 
+		% allow for some offset in time
+		S = circshift(S,floor(self.Parameters.t_offset));
 
 
 		options = odeset('MaxStep',.1);
@@ -110,12 +119,9 @@ methods
 
 		warning on
 
-		
+
 		
 	
-
-		% allow for some offset in time
-		x2 = circshift(x2,floor(self.Parameters.t_offset));
 
 
 		f2 = (1 + S(:)*phi).*x2(:);
@@ -142,9 +148,15 @@ methods
 
 			dx2 = (stim*phi*x1)/tau_2 - (1+ stim*phi)*x2/tau_2 - w*dTheta2;
 
+
 			dTheta1 = x1*(1 - Theta1)/tau_a - k_d*Theta1/tau_a;
 
-			dx1 = (1 - x1)/tau_s - (stim*phi*x1)/(tau_2) - w*dTheta1;
+			if tau_s == 0
+				dx1 = 0;
+				x(1) = 1;
+			else
+				dx1 = (1 - x1)/tau_s - (stim*phi*x1)/(tau_2) - w*dTheta1;
+			end
 
 			dy = 0*y;
 			dy(1) = dx1;
@@ -154,6 +166,9 @@ methods
 
 			dy = dy(:);
 		end
+
+
+
 
 
 		% in this simplification, we assume that tau_a = 0 
@@ -173,7 +188,13 @@ methods
 
 			effective_tau = 1 + (w/k_d)/((1+(x1/k_d))^2);
 
-			dx1 = ((1-x1)/tau_s - (stim*phi*x1)/(tau_2*L))/effective_tau;
+
+			if tau_s == 0
+				dx1 = 0;
+				x1 = 1;
+			else
+				dx1 = ((1-x1)/tau_s - (stim*phi*x1)/(tau_2*L))/effective_tau;
+			end
 
 
 			dy = y;
@@ -211,7 +232,12 @@ methods
 
 			effective_tau = 1 + w;
 
-			dx1 = ((1-x1)/tau_s - (stim*phi*x1)/(tau_2*L))/effective_tau;
+			if tau_s == 0 
+				dx1 = 0;
+				x(1) = 1;
+			else
+				dx1 = ((1-x1)/tau_s - (stim*phi*x1)/(tau_2*L))/effective_tau;
+			end
 
 			dy = y;
 			dy(1) = dx1;

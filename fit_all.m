@@ -15,24 +15,28 @@ load fit_data
 Model = TwoTubesX;
 
 
+Model.FitOptions.UseParallel = true;
+Model.FitOptions.Display = 'iter';
+Model.FitOptions.MaxIterations = 200;
+
 % specify bounds. Parameters will be found 
 % within these bounds
 
-lb.t_offset = 0;
-ub.t_offset = 10;
 
-lb.k_d = 1e-4;
-ub.k_d = 1e4;
+lb.t_offset = 5;
+ub.t_offset = 15;
+
+lb.tau_a = 1e-3;
+ub.tau_a = 100;
+
+lb.k_d = 1e-3;
+ub.k_d = 1e3;
 
 lb.w = 0;
 ub.w = 1e3;
 
-lb.tau_s = 1e-6;
-ub.tau_s = 10;
-
-lb.tau_a = 1e-3;
-ub.tau_a = 1e3;
-
+lb.tau_s = 0;
+ub.tau_s = 0;
 
 % define bounds for initial seeds
 lb = orderfields(lb);
@@ -44,7 +48,7 @@ H = [ParameterNames{structlib.vectorise(ub) - structlib.vectorise(lb) == 0}];
 
 
 % how many times should we fit each odorant?
-N = 30; 
+N = 10; 
 
 
 all_r2 = NaN(length(fd),N);
@@ -53,23 +57,26 @@ all_r2 = NaN(length(fd),N);
 savename = [class(Model)  H '.fitparams'];
 
 
+disp('Saving to:')
+disp(savename)
+
 if exist(savename,'file') == 2
 	load(savename,'-mat')
 end
 
 
 for j = 1:N
-	for i = length(fd):-1:1
+	for i = 1:length(fd)
 
 
-		if ~isnan(all_r2(i,j))
-			continue
-		end
+		% if ~isnan(all_r2(i,j)) && all_r2(i,j) > .99
+		% 	continue
+		% end
 
 		disp(['Fitting ' mat2str(i)])
 
-		ub.t_offset = best_offsets(i);
-		lb.t_offset = best_offsets(i);
+		ub.t_offset = best_offsets(i)+5;
+		lb.t_offset = best_offsets(i)-5;
 
 		Model.Stimulus = fd(i).stimulus;
 		Model.Response = fd(i).response;
@@ -78,11 +85,12 @@ for j = 1:N
 
 		
 
-		for k = 1:length(ParameterNames)
-			Model.Parameters.(ParameterNames{k}) = 1;
-		end
+		% for k = 1:length(ParameterNames)
+		% 	Model.Parameters.(ParameterNames{k}) = 1;
+		% end
 
-		% Model.Parameters = [];
+
+		Model.Parameters = [];
 
 	
 		Model.fit;
@@ -103,7 +111,10 @@ for j = 1:N
 		if ismac
 			close all
 			drawnow
-			Model.plot;
+			figure('outerposition',[300 300 1200 600],'PaperUnits','points','PaperSize',[1200 600]); hold on
+			plot(Model.Response,'k')
+			plot(Model.Prediction,'r')
+			title(i)
 			drawnow
 		end
 
