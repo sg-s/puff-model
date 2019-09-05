@@ -33,7 +33,7 @@ lb.k_d = 1e-3;
 ub.k_d = 1e3;
 
 lb.w = 0;
-ub.w = 1e3;
+ub.w = 1e4;
 
 lb.tau_s = 0;
 ub.tau_s = 0;
