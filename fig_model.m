@@ -2,6 +2,12 @@ clearvars
 close all
 
 
+c = lines(8);
+c(2:4,:) = c([1 4 5],:);
+c(1,:) = [1 0 0];
+
+
+
 figure('outerposition',[300 300 601 901],'PaperUnits','points','PaperSize',[601 901]); hold on
 
 
@@ -36,7 +42,9 @@ clear ax
 for i = 1:5
 	ax(i).hero = subplot(5,2,(i-1)*2+1); hold on
 	set(ax(i).hero,'XLim',[.5 3],'YLim',[-.1 1.1])
-	plot(ax(i).hero,[0 3],[0 0],'k:')
+	if i > 1
+		plot(ax(i).hero,[0 3],[0 0],'k:')
+	end
 	axis off
 end
 
@@ -65,7 +73,7 @@ Model.Parameters = p(2,idx);
 Model.evaluate;
 
 time = linspace(0,3,300);
-plot(ax(2).hero,time,Model.Prediction,'r')
+plot(ax(2).hero,time,Model.Prediction,'Color',c(1,:))
 title(ax(2).hero,alldata(2).odour_name,'FontWeight','normal')
 
 
@@ -81,7 +89,7 @@ for i = 1:length(show_these)
 	Model.Parameters = p(show_these(i),idx);
 	Model.evaluate;
 	time = linspace(0,3,300);
-	plot(ax(2).examples(i),time,Model.Prediction,'r')
+	plot(ax(2).examples(i),time,Model.Prediction,'Color',c(1,:))
 	T = regexprep(alldata(show_these(i)).odour_name,'[\n\r]+','');
 	title(ax(2).examples(i),T,'FontSize',12,'FontWeight','normal')
 end
@@ -100,7 +108,7 @@ load TwoTubesXtau_s.fitparams -mat
 Model.Parameters = p(14,idx);
 Model.evaluate;
 
-plot(ax(3).hero,time,Model.Prediction,'r')
+plot(ax(3).hero,time,Model.Prediction,'Color',c(2,:))
 title(ax(3).hero,alldata(14).odour_name,'FontWeight','normal')
 
 show_these = [25  15 16 18];
@@ -117,7 +125,7 @@ for i = 1:length(show_these)
 	Model.Parameters = p(show_these(i),idx);
 	Model.evaluate;
 	time = linspace(0,3,300);
-	plot(ax(3).examples(i),time,Model.Prediction,'r')
+	plot(ax(3).examples(i),time,Model.Prediction,'Color',c(2,:))
 	T = regexprep(alldata(show_these(i)).odour_name,'[\n\r]+','');
 	title(ax(3).examples(i),T,'FontSize',12,'FontWeight','normal')
 end
@@ -141,7 +149,7 @@ load TwoTubesXtau_s.fitparams -mat
 Model.Parameters = p(6,idx);
 Model.evaluate;
 
-plot(ax(4).hero,time,Model.Prediction,'r')
+plot(ax(4).hero,time,Model.Prediction,'Color',c(3,:))
 
 title(ax(4).hero,alldata(6).odour_name,'FontWeight','normal')
 
@@ -160,7 +168,7 @@ for i = 1:length(show_these)
 	Model.Parameters = p(show_these(i),idx);
 	Model.evaluate;
 	time = linspace(0,3,300);
-	plot(ax(4).examples(i),time,Model.Prediction,'r')
+	plot(ax(4).examples(i),time,Model.Prediction,'Color',c(3,:))
 
 	T = regexprep(alldata(show_these(i)).odour_name,'[\n\r]+','');
 	title(ax(4).examples(i),T,'FontSize',12,'FontWeight','normal')
@@ -181,7 +189,7 @@ load TwoTubesXtau_s.fitparams -mat
 Model.Parameters = p(8,idx);
 Model.evaluate;
 
-plot(ax(5).hero,time,Model.Prediction,'r')
+plot(ax(5).hero,time,Model.Prediction,'Color',c(4,:))
 
 title(ax(5).hero,alldata(8).odour_name,'FontWeight','normal')
 
@@ -200,7 +208,7 @@ for i = 1:length(show_these)
 	Model.Parameters = p(show_these(i),idx);
 	Model.evaluate;
 	time = linspace(0,3,300);
-	plot(ax(5).examples(i),time,Model.Prediction,'r')
+	plot(ax(5).examples(i),time,Model.Prediction,'Color',c(4,:))
 
 	T = regexprep(alldata(show_these(i)).odour_name,'[\n\r]+','');
 	title(ax(5).examples(i),T,'FontSize',12,'FontWeight','normal')
@@ -229,7 +237,7 @@ a(3) = annotation('textarrow',[0.4    0.4],[.52 .48],'String','Lingering plateau
 a(4) = annotation('textarrow',[0.1552    0.1958],[0.54    0.5],'String','Sharp rise');
 a(5) = annotation('textarrow',[0.4    0.4],[.31 .34],'String','Large plateau');
 a(6) = annotation('textarrow',[0.35    0.3],[.37 .37],'String','Sharp drop');
-a(7) = annotation('textarrow',[0.16    0.21],[0.36    0.33],'String','Slow rise');
+a(7) = annotation('textarrow',[0.16    0.21],[0.36    0.33],'String',['Fast, then ' newline 'slow rise']);
 a(8) = annotation('textarrow',[0.16    0.21],[0.2    0.17],'String','Slow rise');
 a(9) = annotation('textarrow',[0.35    0.3],[.2 .18],'String','Slower decay');
 
